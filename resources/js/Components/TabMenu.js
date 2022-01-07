@@ -4,7 +4,7 @@ import { ChevronRightIcon } from '@chakra-ui/icons';
 const childrenItem = (children, handleClick) => {
   if (children) {
     return (children.map(x => (
-      <li key={x.title} onClick={handleClick}>
+      <li key={x.title} onClick={() => handleClick(x)}>
         <a id={x.name} rel={x.ele}>
           <ChevronRightIcon />
           {x.title}

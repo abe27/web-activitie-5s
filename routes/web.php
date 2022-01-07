@@ -4,6 +4,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\AdministratoController;
+use App\Http\Controllers\SectionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,6 +33,12 @@ Route::get('/dashboard', function () {
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::prefix('/administrator')->group(function () {
         Route::get('/index', [AdministratoController::class, 'index'])->name('administrator.index');
+
+        /* จัดการข้อมูลแผนก */
+        Route::prefix('/section')->group(function () {
+            Route::get('/get', [SectionController::class, 'index'])->name('administrator.section.get');
+            Route::post('/post', [SectionController::class, 'store'])->name('administrator.section.post');
+        });
     });
 });
 

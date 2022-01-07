@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Section;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class SectionController extends Controller
 {
@@ -15,6 +16,17 @@ class SectionController extends Controller
     public function index()
     {
         //
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function get()
+    {
+        $data = Section::get();
+        return response()->json($data, 200);
     }
 
     /**
@@ -35,7 +47,17 @@ class SectionController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = Validator::make($request->all, [
+            'title' => 'required|unique:posts|max:255|min:20',
+            'description' => 'required',
+        ]);
+
+        if ($validated->fails()) {
+
+        }
+
+        /* สร้าง Record */
+        return null;
     }
 
     /**
