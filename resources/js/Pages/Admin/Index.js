@@ -54,7 +54,7 @@ const AdminPage = (props) => {
       data = null;
     }
     // console.dir(data);
-    setSelectElement(<obj.element href={obj} list_data={data} handleModal={onOpen} handleDelete={handleDelete} />);
+    setSelectElement(<obj.element href={obj} list_data={data} handleModal={onOpen} handleDelete={handleDelete} handleEdit={handleEdit}/>);
     setObjectData(obj);
   };
 
@@ -63,6 +63,8 @@ const AdminPage = (props) => {
     setPostLink(`${obj.ref}.post`);
     get(obj);
   };
+
+  const handleEdit = (obj, i) => {}
 
   const handleDelete = (obj, i) => {
     destroy(route(`${obj.ref}.destroy`, i.id), {

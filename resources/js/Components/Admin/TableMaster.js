@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "@chakra-ui/react";
-import { AddIcon, DeleteIcon, CheckIcon, SmallCloseIcon } from '@chakra-ui/icons';
+import { AddIcon, DeleteIcon, CheckIcon, SmallCloseIcon, EditIcon } from '@chakra-ui/icons';
 import StackSkeleton from '@/Components/StackSkeleton';
 
 const checkIconStatus = (icon) => {
@@ -20,7 +20,7 @@ const reDate = (dte) => {
   return `${d.getFullYear()}/${m}/${date} ${h}:${mm}`;
 };
 
-const MasterTable = ({ href = null, list_data = null, handleModal, handleDelete }) => (
+const MasterTable = ({ href = null, list_data = null, handleModal, handleDelete, handleEdit }) => (
   <>
     <div className="overflow-x-auto">
       <table className="table w-full">
@@ -57,6 +57,9 @@ const MasterTable = ({ href = null, list_data = null, handleModal, handleDelete 
               <td>{checkIconStatus(i.is_status)}</td>
               <td>{reDate(i.updated_at)}</td>
               <td>
+                <button className="btn btn-error btn-ghost btn-xs" onClick={() => handleEdit(href, i)}>
+                  <EditIcon />
+                </button>
                 <button className="btn btn-error btn-ghost btn-xs" onClick={() => handleDelete(href, i)}>
                   <DeleteIcon />
                 </button>
