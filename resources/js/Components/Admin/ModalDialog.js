@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button, Input, Textarea, Switch, Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, useToast } from '@chakra-ui/react';
 import { useForm } from '@inertiajs/inertia-react';
 
-const ModalDialog = ({ title = "Model Title", isOpen = false, onClose = true, routeLink = null }) => {
+const ModalDialog = ({ obj = null, title = "Model Title", isOpen = false, onClose = true, routeLink = null, handleModal = false }) => {
   const toast = useToast();
+  const [isEnabled, setIsEnabled] = useState('ปิดการใช้งาน');
   const { data, setData, post, processing, errors, reset } = useForm({
     title: '',
     description: '',
@@ -17,14 +18,32 @@ const ModalDialog = ({ title = "Model Title", isOpen = false, onClose = true, ro
         title: 'เกิดข้อผิดพลาด',
         description: "กรุณาระบุหัวข้อที่ต้องการบันทึกด้วย",
         status: 'error',
-        duration: 5000,
+        duration: 2500,
+        position: 'top-right',
         isClosable: true,
       });
     }
     else {
-      // const postData =
-      post(routeLink);
-      onClose();
+      /* บันทึกข้อมูล */
+      post(route(routeLink), {
+        onSuccess: r => {
+          console.dir(r);
+          toast({
+            title: r.props.flash.header,
+            description: r.props.flash.message,
+            status: 'success',
+            duration: 2500,
+            position: 'top-right',
+            isClosable: true,
+          });
+
+          data.is_status = false;
+          setIsEnabled('ปิดการใช้งาน');
+          reset();
+          onClose();
+          handleModal(obj);
+        }
+      });
     }
   };
 
@@ -38,8 +57,14 @@ const ModalDialog = ({ title = "Model Title", isOpen = false, onClose = true, ro
     }
     else if (e.target.type == "checkbox") {
       data.is_status = !data.is_status;
+      if (data.is_status) {
+        setIsEnabled('เปิดใช้งาน');
+      }
+      else {
+        setIsEnabled('ปิดการใช้งาน');
+      }
     }
-    console.dir(data);
+    // console.dir(data);
   };
 
   return (
@@ -53,11 +78,12 @@ const ModalDialog = ({ title = "Model Title", isOpen = false, onClose = true, ro
             <div className="py-2">
               <Input onChange={changeStatus} placeholder='หัวข้อ' />
             </div>
+            <div>{errors.title}</div>
             <div className="py-2">
               <Textarea onChange={changeStatus} placeholder='รายละเอียด/ข้อมูลเพิ่มเติม' />
             </div>
             <div className="py-2">
-              <Switch onChange={changeStatus}>เปิดใช้งาน</Switch>
+              <Switch onChange={changeStatus}>{isEnabled}</Switch>
             </div>
           </ModalBody>
 

@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Section;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
+use App\Http\Requests\Admin\MasterRequest;
+use Inertia\Inertia;
 
 class SectionController extends Controller
 {
@@ -45,19 +46,17 @@ class SectionController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(MasterRequest $request)
     {
-        $validated = Validator::make($request->all, [
-            'title' => 'required|unique:posts|max:255|min:20',
-            'description' => 'required',
-        ]);
-
-        if ($validated->fails()) {
-
-        }
-
+        // // return response()->json($request);
         /* สร้าง Record */
-        return null;
+        $data = Section::create($request->validated());
+        return back()->with([
+            'success' => true,
+            'header' => 'ข้อความแจ้งเตือน',
+            'message' => "บันทึกข้อมูล '".$request->title."' เรียบร้อยแล้ว",
+            'data' => $data
+        ]);
     }
 
     /**
@@ -102,6 +101,13 @@ class SectionController extends Controller
      */
     public function destroy(Section $section)
     {
-        //
+        // return Inertia::render($section);
+        $data = $section;
+        return back()->with([
+            'success' => $section->delete(),
+            'header' => 'ข้อความแจ้งเตือน',
+            'message' => "'".$data->title ."' ถูกลบเรียบร้อยบแล้ว",
+            'data' => $data
+        ]);
     }
 }

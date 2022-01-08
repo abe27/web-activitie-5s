@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import Authenticated from '@/Layouts/Authenticated';
-import { Head } from '@inertiajs/inertia-react';
+import { Head, useForm } from '@inertiajs/inertia-react';
 import Breadcrumb from '@/Components/Breadcrumb';
 import TabMenu from '@/Components/TabMenu';
 import MasterTable from '@/Components/Admin/TableMaster';
 import ModalDialog from '@/Components/Admin/ModalDialog';
-import { useDisclosure } from '@chakra-ui/react';
+import { useToast, useDisclosure } from '@chakra-ui/react';
 
 const bCrumb = [
   { name: "Home", href: "#" },
@@ -39,9 +39,12 @@ const mTabMaster = [
 ];
 
 const AdminPage = (props) => {
+  const toast = useToast();
+  const { delete: destroy } = useForm({});
   const [tabName, setTabName] = useState("กรุณาเลือกข้อมูลที่ต้องการจัดการ");
   const [selectElement, setSelectElement] = useState(null);
   const [postLink, setPostLink] = useState(null);
+  const [objData, setObjectData] = useState(null);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const get = async (obj) => {
@@ -50,15 +53,38 @@ const AdminPage = (props) => {
     if (data.length <= 0) {
       data = null;
     }
-    setSelectElement(<obj.element list_data={data} handleModal={onOpen} />);
+    // console.dir(data);
+    setSelectElement(<obj.element href={obj} list_data={data} handleModal={onOpen} handleDelete={handleDelete} />);
+    setObjectData(obj);
   };
 
   const handleClick = (obj) => {
-    console.dir(obj);
     setTabName(`จัดการข้อมูล ${obj.title}`);
-    setPostLink(route(`${obj.ref}.post`));
+    setPostLink(`${obj.ref}.post`);
     get(obj);
   };
+
+  const handleDelete = (obj, i) => {
+    destroy(route(`${obj.ref}.destroy`, i.id), {
+      onSuccess: (r) => {
+        let txt_success = 'error';
+        if (r.props.flash.success) {
+          txt_success = 'success';
+        }
+
+        toast({
+          title: r.props.flash.header,
+          description: r.props.flash.message,
+          status: 'success',
+          duration: 2500,
+          position: 'top-right',
+          isClosable: true,
+        });
+        console.dir(r);
+        get(obj);
+      }
+    });
+  }
 
   return (
     <Authenticated
@@ -79,7 +105,7 @@ const AdminPage = (props) => {
           {selectElement}
         </div>
       </div>
-      <ModalDialog title="เพิ่มข้อมูล" isOpen={isOpen} onClose={onClose} routeLink={postLink} />
+      <ModalDialog obj={objData} title="เพิ่มข้อมูล" isOpen={isOpen} onClose={onClose} routeLink={postLink} handleModal={handleClick} />
     </Authenticated>
   );
 }

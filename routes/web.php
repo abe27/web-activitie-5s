@@ -36,8 +36,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         /* จัดการข้อมูลแผนก */
         Route::prefix('/section')->group(function () {
-            Route::get('/get', [SectionController::class, 'index'])->name('administrator.section.get');
+            Route::get('/get', [SectionController::class, 'get'])->name('administrator.section.get');
             Route::post('/post', [SectionController::class, 'store'])->name('administrator.section.post');
+            Route::delete('/destroy/{section}', [SectionController::class, 'destroy'])->name('administrator.section.destroy');
         });
     });
 });

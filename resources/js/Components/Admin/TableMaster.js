@@ -1,8 +1,25 @@
 import React from "react";
-import { AddIcon, DeleteIcon, CheckIcon, CloseIcon } from '@chakra-ui/icons';
+import { AddIcon, DeleteIcon, CheckIcon, SmallCloseIcon } from '@chakra-ui/icons';
 import StackSkeleton from '@/Components/StackSkeleton';
 
-const MasterTable = ({ list_data = null, handleModal }) => (
+const checkIconStatus = (icon) => {
+  if (icon) {
+    return <CheckIcon viewBox="0 0 18 18" color='green.500' />;
+  }
+  return <SmallCloseIcon color='red.500' />;
+}
+
+const reDate = (dte) => {
+  let d = new Date(dte);
+  let m = String(d.getMonth() + 1).padStart(2, '0');
+  let date = String(d.getDate()).padStart(2, '0');
+
+  let h = String(d.getHours()).padStart(2, '0');
+  let mm = String(d.getMinutes()).padStart(2, '0');
+  return `${d.getFullYear()}/${m}/${date} ${h}:${mm}`;
+};
+
+const MasterTable = ({ href = null, list_data = null, handleModal, handleDelete }) => (
   <>
     <div className="overflow-x-auto">
       <table className="table w-full">
@@ -28,22 +45,20 @@ const MasterTable = ({ list_data = null, handleModal }) => (
               </th>
             </tr>
           )}
-          {list_data && (
-            <tr>
-              <th>1</th>
-              <td>Cy Ganderton</td>
-              <td>Quality Control Specialist</td>
+          {list_data && list_data.map((i, x) => (
+            <tr key={i.id}>
+              <th>{x + 1}</th>
+              <td>{i.title}</td>
+              <td>{i.description}</td>
+              <td>{checkIconStatus(i.is_status)}</td>
+              <td>{reDate(i.updated_at)}</td>
               <td>
-                <CheckIcon color='green.500' />
-              </td>
-              <td>2022-01-01 00:00</td>
-              <td>
-                <button className="btn btn-error btn-ghost btn-xs">
+                <button className="btn btn-error btn-ghost btn-xs" onClick={() => handleDelete(href, i)}>
                   <DeleteIcon />
                 </button>
               </td>
             </tr>
-          )}
+          ))}
         </tbody>
       </table>
     </div>
