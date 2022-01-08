@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Admin\MasterRequest;
 use App\Models\Department;
 use Illuminate\Http\Request;
 
@@ -15,6 +16,17 @@ class DepartmentController extends Controller
     public function index()
     {
         //
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function get()
+    {
+        $data = Department::get();
+        return response()->json($data, 200);
     }
 
     /**
@@ -33,9 +45,16 @@ class DepartmentController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(MasterRequest $request)
     {
-        //
+        /* สร้าง Record */
+        $data = Department::create($request->validated());
+        return back()->with([
+            'success' => true,
+            'header' => 'ข้อความแจ้งเตือน',
+            'message' => "บันทึกข้อมูล '".$request->title."' เรียบร้อยแล้ว",
+            'data' => $data
+        ]);
     }
 
     /**
@@ -80,6 +99,12 @@ class DepartmentController extends Controller
      */
     public function destroy(Department $department)
     {
-        //
+        $data = $department;
+        return back()->with([
+            'success' => $department->delete(),
+            'header' => 'ข้อความแจ้งเตือน',
+            'message' => "'".$data->title ."' ถูกลบเรียบร้อยบแล้ว",
+            'data' => $data
+        ]);
     }
 }

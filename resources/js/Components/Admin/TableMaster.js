@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "@chakra-ui/react";
 import { AddIcon, DeleteIcon, CheckIcon, SmallCloseIcon } from '@chakra-ui/icons';
 import StackSkeleton from '@/Components/StackSkeleton';
 
@@ -48,7 +49,10 @@ const MasterTable = ({ href = null, list_data = null, handleModal, handleDelete 
           {list_data && list_data.map((i, x) => (
             <tr key={i.id}>
               <th>{x + 1}</th>
-              <td>{i.title}</td>
+              <td>
+                <Link href={route(`${href.ref}.show`, i.id)}>{i.title}</Link>
+                {/* {route(`${href.ref}.show`, i.id)} */}
+              </td>
               <td>{i.description}</td>
               <td>{checkIconStatus(i.is_status)}</td>
               <td>{reDate(i.updated_at)}</td>

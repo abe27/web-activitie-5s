@@ -21,7 +21,7 @@ const mTabMaster = [
       { name: "address_zipcode", title: "รหัสไปรษณีย์", ref: '', element: MasterTable },
       { name: "master_edu", title: "ระดับการศึกษา", ref: '', element: MasterTable },
       { name: "master_section", title: "แผนก", ref: 'administrator.section', element: MasterTable },/* get,post,put,delete */
-      { name: "master_department", title: "ฝ่าย", ref: '', element: MasterTable },
+      { name: "master_department", title: "ฝ่าย", ref: 'administrator.department', element: MasterTable },
       { name: "master_position", title: "ตำแหน่ง", ref: '', element: MasterTable },
       { name: "master_org", title: "องค์กร", ref: '', element: MasterTable },
       { name: "master_shift", title: "การเข้างาน", ref: '', element: MasterTable },
