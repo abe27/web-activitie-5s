@@ -27,7 +27,6 @@ const ModalDialog = ({ obj = null, title = "Model Title", isOpen = false, onClos
       /* บันทึกข้อมูล */
       post(route(routeLink), {
         onSuccess: r => {
-          console.dir(r);
           toast({
             title: r.props.flash.header,
             description: r.props.flash.message,
